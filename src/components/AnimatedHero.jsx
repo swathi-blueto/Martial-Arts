@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 
 import Header from "./Header";
+import { Link } from "react-router-dom";
 
 const AnimatedHero = () => {
   return (
@@ -37,15 +38,17 @@ const AnimatedHero = () => {
           Trichy
         </motion.p>
 
+        <Link to="/contact">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg">
+          <button className="bg-yellow-500 cursor-pointer hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition-all transform hover:scale-105 shadow-lg">
             Join Our Classes
           </button>
         </motion.div>
+        </Link>
       </div>
 
       <motion.div

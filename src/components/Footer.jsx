@@ -4,7 +4,7 @@ import { FiMapPin, FiPhone, FiMail } from "react-icons/fi";
 
 const Footer = () => {
   return (
-    <footer className="bg-white text-gray-800 pt-16 pb-8 relative">
+    <footer className="bg-white text-gray-800 pt-16 px-10 pb-8 relative">
       
       <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-400"></div>
       

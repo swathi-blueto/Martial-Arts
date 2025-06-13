@@ -1,14 +1,29 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 
 const Gallery = () => {
   const galleryImages = [
-    { id: 1, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s", category: "training" },
-    { id: 2, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s", category: "performance" },
-    { id: 3, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s", category: "training" },
-    { id: 4, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s", category: "competition" },
-   
+    {
+      id: 1,
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s",
+      category: "training",
+    },
+    {
+      id: 2,
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s",
+      category: "performance",
+    },
+    {
+      id: 3,
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s",
+      category: "training",
+    },
+    {
+      id: 4,
+      src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRq3pRUBMRNhrD_EscnP_S3DOi7zUzopXhJWQ&s",
+      category: "competition",
+    },
   ];
 
   const categories = [
@@ -18,6 +33,11 @@ const Gallery = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const filteredImages =
     activeCategory === "all"
@@ -73,9 +93,8 @@ const Gallery = () => {
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            animate={isLoaded ? { opacity: 1 } : {}}
             transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
           >
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               {categories.map((category) => (
@@ -100,9 +119,8 @@ const Gallery = () => {
                 <motion.div
                   key={img.id}
                   initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
+                  animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
                   transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
                   whileHover={{ scale: 1.02 }}
                   className="overflow-hidden rounded-lg shadow-md cursor-pointer bg-white border border-gray-100"
                   onClick={() => openImage(img, index)}
@@ -111,6 +129,7 @@ const Gallery = () => {
                     src={img.src}
                     alt={`Silambam ${img.category}`}
                     className="w-full h-64 object-cover hover:opacity-90 transition-opacity"
+                    loading="lazy"
                   />
                   <div className="p-4 text-center bg-yellow-50">
                     <span className="text-sm font-medium text-red-600 capitalize">

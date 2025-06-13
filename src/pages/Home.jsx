@@ -1,36 +1,69 @@
 import { motion } from "framer-motion";
 import AnimatedHero from "../components/AnimatedHero";
 import EventCard from "../components/EventCard";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { useEventStore } from "../store/eventStore";
+import { useEffect } from "react";
+
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={`${className} arrow`}
+      style={{ ...style, display: "block" }}
+      onClick={onClick}
+    />
+  );
+}
+
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={`${className} arrow`}
+      style={{ ...style, display: "block" }}
+      onClick={onClick}
+    />
+  );
+}
 
 const Home = () => {
-  const featuredEvents = [
-    {
-      id: 1,
-      title: "Annual Silambam Championship",
-      date: "July 15, 2023",
-      location: "Trichy District Stadium",
-      image:
-        "https://images.pexels.com/photos/14828326/pexels-photo-14828326.jpeg",
-      excerpt:
-        "Join us for our biggest event of the year featuring competitions in various categories.",
-    },
-    {
-      id: 2,
-      title: "Traditional Weapons Workshop",
-      date: "August 5, 2023",
-      location: "Club Training Hall",
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkZnz7chiAQM1lDtRFXaowxT_l-8RZv8Ibf0EJsGAmSPT-DNsM_kym6P_VM6sSr1QFsys",
-      excerpt:
-        "Learn traditional Silambam weapons techniques from our master instructors.",
-    },
-  ];
+  const { events, loadEvents } = useEventStore();
+
+  useEffect(() => {
+    loadEvents();
+  }, [loadEvents]);
+
+  const settings = {
+    dots: false,
+    arrows: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 1,
+    initialSlide: 0,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: true,
+        },
+      },
+    ],
+  };
 
   return (
     <div className="bg-white">
       <AnimatedHero />
 
-      <section className="py-16">
+      <section className="py-25 relative">
         <div className="container mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -42,10 +75,18 @@ const Home = () => {
             Upcoming Events
           </motion.h2>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {featuredEvents.map((event, index) => (
-              <EventCard key={event.id} event={event} delay={index * 0.2} />
-            ))}
+          <div className="max-w-6xl mx-auto px-4 relative">
+            <Slider {...settings}>
+              {events.map((event, index) => (
+                <div key={event.id} className="px-2">
+                  <EventCard
+                    event={event}
+                    delay={index * 0.2}
+                    className="mx-auto"
+                  />
+                </div>
+              ))}
+            </Slider>
           </div>
         </div>
       </section>
@@ -129,15 +170,17 @@ const Home = () => {
                   ))}
                 </motion.ul>
 
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.8, duration: 0.6 }}
-                >
-                  <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl">
-                    Learn More About Silambam
-                  </button>
-                </motion.div>
+                <Link to="/about">
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8, duration: 0.6 }}
+                  >
+                    <button className="bg-red-600 hover:bg-red-700 cursor-pointer text-white font-bold py-3 px-8 rounded-lg transition-all shadow-lg hover:shadow-xl">
+                      Learn More About Silambam
+                    </button>
+                  </motion.div>
+                </Link>
               </div>
             </div>
           </motion.div>

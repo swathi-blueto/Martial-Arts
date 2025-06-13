@@ -1,20 +1,32 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const EventCard = ({ event, delay = 0 }) => {
+const EventCard = ({
+  event,
+  delay = 0,
+  showDelete = false,
+  onDelete,
+  className = "",
+}) => {
+  const [imgSrc, setImgSrc] = useState(event.image);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay }}
       viewport={{ once: true }}
-      whileHover={{ y: -8, scale: 1.02 }}
-      className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100"
+      whileHover={{ y: -8 }}
+      className={`relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100 h-full ${className}`}
     >
       <div className="relative h-52 overflow-hidden">
         <img
-          src={event.image}
+          src={imgSrc}
           alt={event.title}
+          onError={() =>
+            setImgSrc("https://via.placeholder.com/400x225?text=Silambam+Event")
+          }
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
@@ -23,13 +35,14 @@ const EventCard = ({ event, delay = 0 }) => {
           <span className="font-medium text-sm">
             {event.date.split(" ")[0]}
           </span>
+
           <span className="font-bold ml-1">
-            {event.date.split(" ")[1].replace(",", "")}
+            {event.date?.split(" ")[1]?.replace(",", "") || ""}
           </span>
         </div>
       </div>
 
-      <div className="p-9">
+      <div className="p-6">
         <div className="absolute top-0 left-0 bg-yellow-400 text-xs text-black px-3 py-1 font-bold rounded-br-xl shadow-md">
           Featured
         </div>
@@ -70,7 +83,7 @@ const EventCard = ({ event, delay = 0 }) => {
 
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-500 to-red-600"></div>
 
-        <Link to={`/events/${event.id}`}>
+        <Link to={`/events/${event.id}`} state={{ fromCard: true }}>
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -79,6 +92,18 @@ const EventCard = ({ event, delay = 0 }) => {
             View Details
           </motion.button>
         </Link>
+
+        {showDelete && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(event.id);
+            }}
+            className="w-full mt-3 bg-red-500 text-white p-2 font-medium rounded-lg z-20 hover:bg-red-600 transition-colors shadow-lg"
+          >
+            Delete Event
+          </button>
+        )}
       </div>
     </motion.div>
   );
