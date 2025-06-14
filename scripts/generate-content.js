@@ -5,36 +5,41 @@ import yaml from 'js-yaml';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const contentDir = path.join(__dirname, '../src/content/events');
-const outputDir = path.join(__dirname, '../dist/content/events'); // Changed to dist for Vite
+const outputDir = path.join(__dirname, '../public/content/events');
 const outputFile = path.join(outputDir, 'index.json');
 
 async function generateContent() {
   try {
     await fs.mkdir(outputDir, { recursive: true });
+
     const files = await fs.readdir(contentDir);
-    const markdownFiles = files.filter(file => file.endsWith('.md'));
+    const mdFiles = files.filter(file => file.endsWith('.md'));
 
     const events = await Promise.all(
-      markdownFiles.map(async (file) => {
+      mdFiles.map(async (file) => {
         const content = await fs.readFile(path.join(contentDir, file), 'utf8');
-        const frontmatter = content.match(/^---\n([\s\S]+?)\n---/);
-        const metadata = frontmatter ? yaml.load(frontmatter[1]) : {};
-        
+
+        // Extract YAML frontmatter
+        const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
+        if (!frontmatterMatch) throw new Error(`No frontmatter in ${file}`);
+
+        const metadata = yaml.load(frontmatterMatch[1]);
+
         return {
           ...metadata,
           id: path.parse(file).name,
           slug: path.parse(file).name,
-          image: metadata.image?.startsWith('/uploads/') 
-            ? metadata.image 
+          image: metadata.image?.startsWith('/uploads/')
+            ? metadata.image
             : `/uploads/${metadata.image}`
         };
       })
     );
 
     await fs.writeFile(outputFile, JSON.stringify(events, null, 2));
-    console.log(`Generated ${events.length} events`);
+    console.log(`✅ Generated ${events.length} events to index.json`);
   } catch (error) {
-    console.error('Content generation failed:', error);
+    console.error('❌ Content generation failed:', error);
     process.exit(1);
   }
 }
