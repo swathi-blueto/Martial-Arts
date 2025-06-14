@@ -59,7 +59,7 @@ const CONTENT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../
 const OUTPUT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/content/events');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.json');
 
-async function generateContent() {
+export async function generateContent() {
   try {
     // 1. Ensure output directory exists
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
@@ -121,5 +121,3 @@ async function generateContent() {
   }
 }
 
-// Execute
-generateContent();
