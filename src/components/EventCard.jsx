@@ -111,29 +111,27 @@
 
 // export default EventCard;
 
-
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const EventCard = ({ event, delay = 0 }) => {
   const [imgSrc, setImgSrc] = useState(() => {
-  if (event.image.startsWith("http")) {
-    return event.image;
-  }
- 
-  return event.image.startsWith("/uploads/") 
-    ? event.image 
-    : `/uploads/${event.image}`;
-});
+    if (event.image.startsWith("http")) {
+      return event.image;
+    }
 
- 
+    return event.image.startsWith("/uploads/")
+      ? event.image
+      : `/uploads/${event.image}`;
+  });
+
   const formatDate = (dateString) => {
-    if (!dateString) return ['', ''];
+    if (!dateString) return ["", ""];
     const date = new Date(dateString);
     return [
-      date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      date.toLocaleDateString('en-US', { year: 'numeric' })
+      date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      date.toLocaleDateString("en-US", { year: "numeric" }),
     ];
   };
 
@@ -152,8 +150,7 @@ const EventCard = ({ event, delay = 0 }) => {
         <img
           src={imgSrc}
           alt={event.title}
-
-          onError={() => 
+          onError={() =>
             setImgSrc("https://via.placeholder.com/400x225?text=Silambam+Event")
           }
           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
@@ -207,8 +204,8 @@ const EventCard = ({ event, delay = 0 }) => {
 
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-500 to-red-600"></div>
 
-        <Link 
-          to={`/events/${event.slug || event.id}`} 
+        <Link
+          to={`/events/${event.slug || event.id}`}
           state={{ eventData: event }}
           className="block w-full text-center"
         >
