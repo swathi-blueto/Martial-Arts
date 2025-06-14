@@ -39,7 +39,7 @@ const Home = () => {
     arrows: true,
     infinite: false,
     speed: 500,
-    slidesToShow: Math.min(2, events.length), // Adjust based on number of events
+    slidesToShow: Math.min(2, events.length), 
     slidesToScroll: 1,
     initialSlide: 0,
     nextArrow: <SampleNextArrow />,
