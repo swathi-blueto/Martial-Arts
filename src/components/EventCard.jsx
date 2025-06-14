@@ -148,7 +148,7 @@ const EventCard = ({ event, delay = 0 }) => {
       whileHover={{ y: -8 }}
       className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100 h-full"
     >
-      <div className="relative h-57 overflow-hidden">
+      <div className="relative h-60 overflow-hidden">
         <img
           src={imgSrc}
           alt={event.title}
