@@ -31,18 +31,53 @@ function SamplePrevArrow(props) {
 }
 
 const Home = () => {
-  const { events, loadEvents } = useEventStore();
+  const [events, setEvents] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+   useEffect(() => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch("/content/events/index.json");
+        if (!response.ok) throw new Error("Failed to load events");
+        const data = await response.json();
+        
+        const parseDate = (dateString) => {
+          try {
+            return new Date(dateString);
+          } catch (e) {
+            console.warn("Invalid date format:", dateString);
+            return new Date(0);
+          }
+        };
 
-  useEffect(() => {
-    loadEvents();
-  }, [loadEvents]);
+        const sortedEvents = data
+          .map((event) => ({
+            ...event,
+            image: event.image.startsWith("http") 
+              ? event.image 
+              : event.image.startsWith("/uploads/")
+                ? event.image
+                : `/uploads/${event.image}`,
+            parsedDate: parseDate(event.date)
+          }))
+          .sort((a, b) => b.parsedDate - a.parsedDate);
+        
+        setEvents(sortedEvents);
+      } catch (error) {
+        console.error("Error loading events:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const settings = {
     dots: false,
     arrows: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: Math.min(2, events.length), // Adjust based on number of events
     slidesToScroll: 1,
     initialSlide: 0,
     nextArrow: <SampleNextArrow />,
@@ -75,19 +110,36 @@ const Home = () => {
             Upcoming Events
           </motion.h2>
 
-          <div className="max-w-6xl mx-auto px-4 relative">
-            <Slider {...settings}>
-              {events.map((event, index) => (
-                <div key={event.id} className="px-2">
-                  <EventCard
-                    event={event}
-                    delay={index * 0.2}
-                    className="mx-auto"
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+            </div>
+          ) : events.length > 0 ? (
+            <div className="max-w-6xl mx-auto px-4 relative">
+              <Slider {...settings}>
+                {events.map((event, index) => (
+                  <div key={event.id} className="px-2">
+                    <EventCard
+                      event={event}
+                      delay={index * 0.2}
+                      className="mx-auto"
+                    />
+                  </div>
+                ))}
+              </Slider>
+              <div className="text-center mt-8">
+                <Link to="/events">
+                  <button className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-all">
+                    View All Events
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-gray-600">No upcoming events found</p>
+            </div>
+          )}
         </div>
       </section>
 

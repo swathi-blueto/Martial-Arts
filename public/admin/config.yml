@@ -12,6 +12,7 @@ collections:
     folder: "src/content/events"
     create: true
     slug: "{{slug}}"
+    sortable_fields: ["date"]
     format: "json" 
     fields:
       - { label: "Title", name: "title", widget: "string" }

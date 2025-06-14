@@ -299,7 +299,7 @@ const Events = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
 
- useEffect(() => {
+useEffect(() => {
   const fetchEvents = async () => {
     setIsLoading(true);
     try {
@@ -307,17 +307,28 @@ const Events = () => {
       if (!response.ok) throw new Error("Failed to load events");
       const data = await response.json();
       
-      setEvents(
-        data.map((event) => ({
+      const parseDate = (dateString) => {
+        try {
+          return new Date(dateString);
+        } catch (e) {
+          console.warn("Invalid date format:", dateString);
+          return new Date(0); // Fallback to epoch
+        }
+      };
+
+      const sortedEvents = data
+        .map((event) => ({
           ...event,
-          // Handles both external URLs and uploaded files:
           image: event.image.startsWith("http") 
             ? event.image 
             : event.image.startsWith("/uploads/")
               ? event.image
-              : `/uploads/${event.image}`
+              : `/uploads/${event.image}`,
+          parsedDate: parseDate(event.date) // Store parsed date for potential display
         }))
-      );
+        .sort((a, b) => b.parsedDate - a.parsedDate);
+      
+      setEvents(sortedEvents);
     } catch (error) {
       console.error("Error loading events:", error);
     } finally {
