@@ -181,15 +181,14 @@
 
 // export default Gallery;
 
-
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
-import galleryData from "../../public/content/gallery/index.json"; // Directly import the JSON file
 
 const Gallery = () => {
-  // Use the imported JSON data directly
-  const galleryImages = galleryData || [];
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const categories = [
     "all",
@@ -201,7 +200,24 @@ const Gallery = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setIsLoaded(true);
+    const fetchGalleryData = async () => {
+      try {
+        const response = await fetch('/content/gallery/index.json');
+        if (!response.ok) {
+          throw new Error('Failed to load gallery data');
+        }
+        const data = await response.json();
+        setGalleryImages(data);
+      } catch (err) {
+        console.error('Error loading gallery data:', err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+        setIsLoaded(true);
+      }
+    };
+
+    fetchGalleryData();
   }, []);
 
   const filteredImages =
@@ -230,6 +246,22 @@ const Gallery = () => {
     setCurrentIndex(newIndex);
     setSelectedImage(filteredImages[newIndex]);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-white">
+        <div className="text-xl text-red-600">Loading gallery...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-white">
+        <div className="text-xl text-red-600">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen">
@@ -307,7 +339,11 @@ const Gallery = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-600">No images found in this category</p>
+                <p className="text-gray-600">
+                  {galleryImages.length === 0
+                    ? "No images found in gallery"
+                    : "No images found in this category"}
+                </p>
               </div>
             )}
           </motion.div>
@@ -319,6 +355,7 @@ const Gallery = () => {
           <button
             onClick={closeImage}
             className="absolute top-4 right-4 text-white text-4xl hover:text-yellow-400 transition-colors"
+            aria-label="Close image"
           >
             <FiX />
           </button>
@@ -326,6 +363,7 @@ const Gallery = () => {
           <button
             onClick={() => navigate("prev")}
             className="absolute left-4 text-white text-4xl hover:text-yellow-400 transition-colors"
+            aria-label="Previous image"
           >
             <FiChevronLeft />
           </button>
@@ -341,6 +379,7 @@ const Gallery = () => {
           <button
             onClick={() => navigate("next")}
             className="absolute right-4 text-white text-4xl hover:text-yellow-400 transition-colors"
+            aria-label="Next image"
           >
             <FiChevronRight />
           </button>

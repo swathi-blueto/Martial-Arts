@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
+    "prebuild": "node scripts/generateGallery.js",
     "preview": "vite preview",
-    "prebuild": "node scripts/generate-content.js",
-    "prestart": "node scripts/generate-content.js"
+    "lint": "eslint .",
+    "generate-gallery": "node scripts/generateGallery.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
