@@ -11,8 +11,8 @@
     "prebuild": "npm run generate-content",
     "prestart": "npm run generate-content",
     "generate-content": "node scripts/generateContent.js",
-    "generate-events": "node scripts/generateEvents.js",
-    "generate-gallery": "node scripts/generateGallery.js"
+    "generate-events": "node scripts/generate-events.js",
+    "generate-gallery": "node scripts/generate-gallery.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
