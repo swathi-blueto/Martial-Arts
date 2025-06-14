@@ -1,36 +1,48 @@
-const fs = require('fs');
-const path = require('path');
-const yaml = require('js-yaml'); // Needed for parsing frontmatter
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import yaml from 'js-yaml';
+
+// ES Module equivalent of __dirname
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const contentDir = path.join(__dirname, '../content/events');
-const outputFile = path.join(__dirname, '../public/content/events/index.json');
+const outputDir = path.join(__dirname, '../public/content/events');
+const outputFile = path.join(outputDir, 'index.json');
 
-// Create output directory if it doesn't exist
-if (!fs.existsSync(path.dirname(outputFile))) {
-  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+async function generateContent() {
+  try {
+    // Create output directory if it doesn't exist
+    await fs.mkdir(outputDir, { recursive: true });
+
+    // Read all Markdown files
+    const files = await fs.readdir(contentDir);
+    const eventFiles = files.filter(file => file.endsWith('.md'));
+
+    // Process each file
+    const events = await Promise.all(
+      eventFiles.map(async (file) => {
+        const filePath = path.join(contentDir, file);
+        const content = await fs.readFile(filePath, 'utf8');
+        
+        const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
+        const frontmatter = frontmatterMatch ? yaml.load(frontmatterMatch[1]) : {};
+        
+        return {
+          ...frontmatter,
+          id: path.parse(file).name,
+          slug: path.parse(file).name
+        };
+      })
+    );
+
+    // Write combined output
+    await fs.writeFile(outputFile, JSON.stringify(events, null, 2));
+    console.log(`Generated ${events.length} events in ${outputFile}`);
+  } catch (error) {
+    console.error('Error generating content:', error);
+    process.exit(1);
+  }
 }
 
-// Read all Markdown files in content directory
-const eventFiles = fs.readdirSync(contentDir)
-  .filter(file => file.endsWith('.md'));
-
-const events = eventFiles.map(file => {
-  const filePath = path.join(contentDir, file);
-  const fileContent = fs.readFileSync(filePath, 'utf8');
-  
-  // Split frontmatter and content
-  const frontmatterMatch = fileContent.match(/^---\n([\s\S]+?)\n---/);
-  const frontmatter = frontmatterMatch ? yaml.load(frontmatterMatch[1]) : {};
-  const body = fileContent.replace(/^---\n[\s\S]+?\n---/, '').trim();
-
-  return {
-    ...frontmatter,
-    id: file.replace('.md', ''),
-    slug: file.replace('.md', ''),
-    body: body // Optional: include the Markdown content
-  };
-});
-
-// Write combined JSON file
-fs.writeFileSync(outputFile, JSON.stringify(events, null, 2));
-console.log(`Generated ${events.length} events from Markdown files`);
+generateContent();
