@@ -1,70 +1,36 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
 
-// Constants for gallery
-const CONTENT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/content/gallery');
-const OUTPUT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/content/gallery');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const GALLERY_DIR = path.join(__dirname, '../src/content/gallery');
+const OUTPUT_DIR = path.join(__dirname, '../public/content/gallery');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.json');
-
 
 export async function generateGallery() {
   try {
-    // Ensure output directory exists
-    await fs.mkdir(OUTPUT_DIR, { recursive: true });
+    // Check if the directory exists
+    await fs.access(GALLERY_DIR);
 
-    // Read markdown files
-    const files = await fs.readdir(CONTENT_DIR);
-    const mdFiles = files.filter(file => file.endsWith('.md'));
-
-    if (mdFiles.length === 0) {
-      console.warn('⚠️ No markdown files found in', CONTENT_DIR);
-    }
-
-    // Process each markdown file
+    const files = await fs.readdir(GALLERY_DIR);
     const items = await Promise.all(
-      mdFiles.map(async (file) => {
-        try {
-          const filePath = path.join(CONTENT_DIR, file);
-          const content = await fs.readFile(filePath, 'utf8');
-
-          // Extract frontmatter
-          const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
-          if (!frontmatterMatch) {
-            throw new Error(`Invalid frontmatter in ${file}`);
-          }
-
-          const metadata = yaml.load(frontmatterMatch[1]);
-
-          if (!metadata.title || !metadata.image) {
-            console.warn(`⚠️ Missing required fields in ${file}`);
-          }
-
-          return {
-            ...metadata,
-            id: path.parse(file).name,
-            slug: path.parse(file).name,
-            image: metadata.image?.startsWith('http')
-              ? metadata.image
-              : metadata.image?.startsWith('/uploads/')
-                ? metadata.image
-                : `/uploads/${metadata.image}`
-          };
-        } catch (error) {
-          console.error(`❌ Error processing ${file}:`, error);
-          return null;
-        }
+      files.map(async (file) => {
+        const filePath = path.join(GALLERY_DIR, file);
+        return {
+          name: path.parse(file).name,
+          file: `/uploads/gallery/${file}` // adjust as per your logic
+        };
       })
     );
 
-    const validItems = items.filter(item => item !== null);
-    await fs.writeFile(OUTPUT_FILE, JSON.stringify(validItems, null, 2));
-    console.log(`✅ Successfully processed ${validItems.length}/${mdFiles.length} gallery items`);
-
-  } catch (error) {
-    console.error('❌ Fatal error in gallery generation:', error);
-    process.exit(1);
+    await fs.mkdir(OUTPUT_DIR, { recursive: true });
+    await fs.writeFile(OUTPUT_FILE, JSON.stringify(items, null, 2));
+    console.log(`✅ Gallery generated with ${items.length} items`);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.warn(`⚠️ Gallery directory not found: ${GALLERY_DIR} — skipping gallery generation`);
+    } else {
+      throw err;
+    }
   }
 }
-
