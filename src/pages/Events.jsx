@@ -303,8 +303,7 @@ const Events = () => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
-        // const response = await fetch("/content/events/index.json");
-        const response = await fetch(`${import.meta.env.BASE_URL}content/events/index.json`);
+        const response = await fetch("/content/events/index.json");
         if (!response.ok) throw new Error("Failed to load events");
         const data = await response.json();
         console.log(data)
