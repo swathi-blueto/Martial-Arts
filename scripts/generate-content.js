@@ -12,11 +12,9 @@ async function main() {
   try {
     console.log('🏗️ Starting content generation...');
     
-    // Run both generators in parallel
-    await Promise.all([
-      generateContent(),
-      generateGallery()
-    ]);
+    // Run both generators sequentially (better for error handling)
+    await generateContent();
+    await generateGallery();
     
     console.log('✅ All content generated successfully');
   } catch (error) {

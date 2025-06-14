@@ -38,8 +38,11 @@ export async function generateGallery() {
           const metadata = yaml.load(frontmatterMatch[1]);
 
           // Validate required fields
-          if (!metadata.title || !metadata.category || !metadata.image) {
-            console.warn(`⚠️ Missing required fields in ${file}`);
+          const requiredFields = ['title', 'category', 'image'];
+          const missingFields = requiredFields.filter(field => !metadata[field]);
+          
+          if (missingFields.length > 0) {
+            console.warn(`⚠️ Missing required fields (${missingFields.join(', ')}) in ${file}`);
             return null;
           }
 
@@ -72,6 +75,6 @@ export async function generateGallery() {
 
   } catch (error) {
     console.error('❌ Gallery generation failed:', error);
-    process.exit(1);
+    throw error; // Re-throw to be caught by main generator
   }
 }
