@@ -111,20 +111,23 @@
 
 // export default EventCard;
 
+
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const EventCard = ({ event, delay = 0 }) => {
   const [imgSrc, setImgSrc] = useState(() => {
-    if (event.image.startsWith("http")) {
-      return event.image;
-    }
-    return event.image.startsWith("/uploads/") 
-      ? event.image 
-      : `/uploads/${event.image}`;
-  });
+  if (event.image.startsWith("http")) {
+    return event.image;
+  }
+ 
+  return event.image.startsWith("/uploads/") 
+    ? event.image 
+    : `/uploads/${event.image}`;
+});
 
+ 
   const formatDate = (dateString) => {
     if (!dateString) return ['', ''];
     const date = new Date(dateString);
@@ -143,39 +146,40 @@ const EventCard = ({ event, delay = 0 }) => {
       transition={{ duration: 0.6, delay }}
       viewport={{ once: true }}
       whileHover={{ y: -8 }}
-      className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100 h-full w-full max-w-xs mx-auto" // Added max-w-xs and mx-auto
+      className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100 h-full max-w-lg"
     >
-      <div className="relative h-40 overflow-hidden"> {/* Reduced height */}
+      <div className="relative h-52 overflow-hidden">
         <img
           src={imgSrc}
           alt={event.title}
+
           onError={() => 
             setImgSrc("https://via.placeholder.com/400x225?text=Silambam+Event")
           }
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300" // Changed to object-cover
+          className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
-        <div className="absolute top-3 right-3 bg-red-600 text-white px-2 py-1 rounded-full shadow-md text-xs"> {/* Smaller date badge */}
-          <span className="font-medium">{displayDate}</span>
+        <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full shadow-md">
+          <span className="font-medium text-sm">{displayDate}</span>
           <span className="font-bold ml-1">{displayYear}</span>
         </div>
       </div>
 
-      <div className="p-4"> {/* Reduced padding */}
-        <div className="absolute top-0 left-0 bg-yellow-400 text-[10px] text-black px-2 py-1 font-bold rounded-br-xl shadow-md"> {/* Smaller type badge */}
+      <div className="p-6">
+        <div className="absolute top-0 left-0 bg-yellow-400 text-xs text-black px-3 py-1 font-bold rounded-br-xl shadow-md">
           {event.type.toUpperCase()}
         </div>
 
-        <h3 className="text-lg font-bold mb-2 text-red-700 group-hover:text-red-600 transition-colors line-clamp-1"> {/* Added line-clamp */}
+        <h3 className="text-xl font-bold mb-2 text-red-700 group-hover:text-red-600 transition-colors">
           {event.title}
         </h3>
 
-        <div className="flex items-center mb-2">
-          <div className="p-1 bg-yellow-100 rounded-full mr-2"> {/* Smaller icon */}
+        <div className="flex items-center mb-3">
+          <div className="p-1.5 bg-yellow-100 rounded-full mr-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3 text-yellow-600" // Smaller icon
+              className="h-4 w-4 text-yellow-600"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -194,10 +198,10 @@ const EventCard = ({ event, delay = 0 }) => {
               />
             </svg>
           </div>
-          <span className="text-gray-600 text-xs line-clamp-1">{event.location}</span> {/* Smaller text */}
+          <span className="text-gray-600 text-sm">{event.location}</span>
         </div>
 
-        <p className="text-gray-600 mb-4 text-xs border-l-2 border-yellow-500 pl-2 py-1 line-clamp-2"> {/* Smaller text and line-clamp */}
+        <p className="text-gray-600 mb-5 text-sm border-l-2 border-yellow-500 pl-3 py-1">
           {event.excerpt}
         </p>
 
@@ -211,7 +215,7 @@ const EventCard = ({ event, delay = 0 }) => {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium py-1.5 px-3 rounded-lg transition-all shadow-sm hover:shadow-md text-sm" // Smaller button
+            className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium py-2 px-4 rounded-lg transition-all shadow-sm hover:shadow-md"
           >
             View Details
           </motion.button>
