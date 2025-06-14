@@ -4,16 +4,16 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Import your generators
-import { generateContent } from './generateEvents.js';
+// Import generators
+import { generateEvents } from './generateEvents.js';
 import { generateGallery } from './generateGallery.js';
 
 async function main() {
   try {
-    console.log('🏗️ Starting content generation...');
+    console.log('🏗 Starting content generation...');
     
-    // Run both generators sequentially (better for error handling)
-    await generateContent();
+    // Run generators sequentially
+    await generateEvents();
     await generateGallery();
     
     console.log('✅ All content generated successfully');
