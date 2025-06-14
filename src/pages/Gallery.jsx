@@ -181,6 +181,9 @@
 
 // export default Gallery;
 
+
+
+
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
