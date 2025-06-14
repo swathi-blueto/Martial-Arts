@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useEventStore } from "../store/eventStore";
-import { useEffect } from "react";
+
+import useEvents from "../hooks/useEvents";
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
@@ -31,46 +31,8 @@ function SamplePrevArrow(props) {
 }
 
 const Home = () => {
-  const [events, setEvents] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-   useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/content/events/index.json");
-        if (!response.ok) throw new Error("Failed to load events");
-        const data = await response.json();
-        
-        const parseDate = (dateString) => {
-          try {
-            return new Date(dateString);
-          } catch (e) {
-            console.warn("Invalid date format:", dateString);
-            return new Date(0);
-          }
-        };
-
-        const sortedEvents = data
-          .map((event) => ({
-            ...event,
-            image: event.image.startsWith("http") 
-              ? event.image 
-              : event.image.startsWith("/uploads/")
-                ? event.image
-                : `/uploads/${event.image}`,
-            parsedDate: parseDate(event.date)
-          }))
-          .sort((a, b) => b.parsedDate - a.parsedDate);
-        
-        setEvents(sortedEvents);
-      } catch (error) {
-        console.error("Error loading events:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchEvents();
-  }, []);
+  const { events, isLoading, error } = useEvents();
+  
 
   const settings = {
     dots: false,
@@ -98,7 +60,7 @@ const Home = () => {
     <div className="bg-white">
       <AnimatedHero />
 
-      <section className="py-25 relative">
+         <section className="py-25 relative">
         <div className="container mx-auto px-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}

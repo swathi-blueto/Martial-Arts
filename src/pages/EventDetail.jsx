@@ -131,16 +131,37 @@
 // export default EventDetail;
 
 
-
 import { useParams } from "react-router-dom";
-import { useEventStore } from "../store/eventStore";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import useEvents from "../hooks/useEvents";
 
 const EventDetail = () => {
   const { id } = useParams();
-  const { events } = useEventStore();
-  const event = events.find((e) => e.id === parseInt(id));
+  const { events, isLoading, error } = useEvents();
+  const event = events.find((e) => e.id === id);
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600 text-center">
+          <h2 className="text-xl font-bold">Error loading events</h2>
+          <p>{error.message}</p>
+          <Link to="/events" className="text-blue-600 hover:underline mt-4 inline-block">
+            Back to Events
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+      </div>
+    );
+  }
 
   if (!event) {
     return (
@@ -163,7 +184,6 @@ const EventDetail = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      {/* Added banner section matching Gallery page */}
       <section className="py-20 bg-gradient-to-b from-red-700 to-red-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.h1
@@ -180,7 +200,12 @@ const EventDetail = () => {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-xl max-w-3xl mx-auto"
           >
-            {event.date} • {event.location}
+            {new Date(event.date).toLocaleDateString('en-US', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })} • {event.location}
           </motion.p>
         </div>
       </section>
@@ -198,6 +223,9 @@ const EventDetail = () => {
                 src={event.image}
                 alt={event.title}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.src = '/default-event-image.jpg';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
             </div>
@@ -215,9 +243,11 @@ const EventDetail = () => {
                 <div className="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md">
                   <div className="text-center">
                     <div className="font-bold text-xl">
-                      {event.date.split(" ")[1]?.replace(",", "")}
+                      {new Date(event.date).toLocaleDateString('en-US', { day: 'numeric' })}
                     </div>
-                    <div className="text-sm">{event.date.split(" ")[0]}</div>
+                    <div className="text-sm">
+                      {new Date(event.date).toLocaleDateString('en-US', { month: 'short' })}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -247,17 +277,18 @@ const EventDetail = () => {
               </div>
 
               <div className="prose max-w-none mb-8">
-                <p className="text-gray-700 leading-relaxed">{event.excerpt}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                  {event.excerpt}
+                </p>
 
-                <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                  <h3 className="font-bold text-yellow-800 mb-2">
-                    Event Details
-                  </h3>
-                  <p className="text-gray-700">
-                    This {event.type} will cover various aspects of Silambam. Join
-                    us for an exciting session!
-                  </p>
-                </div>
+                {event.description && (
+                  <div className="mt-6">
+                    <h3 className="font-bold text-lg mb-2">Full Description</h3>
+                    <p className="text-gray-700 whitespace-pre-line">
+                      {event.description}
+                    </p>
+                  </div>
+                )}
               </div>
 
               <Link

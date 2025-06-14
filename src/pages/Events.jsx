@@ -289,68 +289,56 @@
 // export default Events;
 
 
-
 import { motion } from "framer-motion";
 import EventCard from "../components/EventCard";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useEvents from "../hooks/useEvents";
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const { events, isLoading, error } = useEvents();
   const [activeFilter, setActiveFilter] = useState("all");
-  const [isLoading, setIsLoading] = useState(true);
 
-useEffect(() => {
-  const fetchEvents = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/content/events/index.json");
-      if (!response.ok) throw new Error("Failed to load events");
-      const data = await response.json();
-      
-      const parseDate = (dateString) => {
-        try {
-          return new Date(dateString);
-        } catch (e) {
-          console.warn("Invalid date format:", dateString);
-          return new Date(0); // Fallback to epoch
-        }
-      };
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-600 text-center">
+          <h2 className="text-xl font-bold">Error loading events</h2>
+          <p>{error.message}</p>
+          <Link to="/" className="text-blue-600 hover:underline mt-4 inline-block">
+            Return Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
-      const sortedEvents = data
-        .map((event) => ({
-          ...event,
-          image: event.image.startsWith("http") 
-            ? event.image 
-            : event.image.startsWith("/uploads/")
-              ? event.image
-              : `/uploads/${event.image}`,
-          parsedDate: parseDate(event.date) // Store parsed date for potential display
-        }))
-        .sort((a, b) => b.parsedDate - a.parsedDate);
-      
-      setEvents(sortedEvents);
-    } catch (error) {
-      console.error("Error loading events:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-  fetchEvents();
-}, []);
-
-  const filteredEvents =
-    activeFilter === "all"
-      ? events
-      : events.filter((event) => event.type === activeFilter);
+  const filteredEvents = activeFilter === "all" 
+    ? events 
+    : events.filter(event => event.type === activeFilter);
 
   return (
     <div className="bg-white min-h-screen">
-      {/* Header remains the same */}
       <section className="py-20 bg-gradient-to-b from-red-700 to-red-800 text-white">
-        {/* ... your existing header ... */}
+        <div className="container mx-auto px-4 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl font-bold mb-6"
+          >
+            Events & Workshops
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-xl max-w-3xl mx-auto"
+          >
+            Join our upcoming events and immerse yourself in Silambam
+          </motion.p>
+        </div>
       </section>
 
-      {/* Events Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           {isLoading ? (
@@ -359,7 +347,6 @@ useEffect(() => {
             </div>
           ) : (
             <>
-              {/* Filter Buttons */}
               <div className="flex flex-wrap justify-center gap-4 mb-8">
                 {["all", "workshop", "competition", "seminar", "webinar"].map(
                   (filter) => (
@@ -380,7 +367,6 @@ useEffect(() => {
                 )}
               </div>
 
-              {/* Events Grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredEvents.length > 0 ? (
                   filteredEvents.map((event, index) => (
