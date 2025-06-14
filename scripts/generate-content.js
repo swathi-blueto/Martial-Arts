@@ -5,13 +5,12 @@ import yaml from 'js-yaml';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const contentDir = path.join(__dirname, '../src/content/events');
-const outputDir = path.join(__dirname, '../public/content/events');
+const outputDir = path.join(__dirname, '../dist/content/events'); // Changed to dist for Vite
 const outputFile = path.join(outputDir, 'index.json');
 
 async function generateContent() {
   try {
     await fs.mkdir(outputDir, { recursive: true });
-    
     const files = await fs.readdir(contentDir);
     const markdownFiles = files.filter(file => file.endsWith('.md'));
 
@@ -25,7 +24,6 @@ async function generateContent() {
           ...metadata,
           id: path.parse(file).name,
           slug: path.parse(file).name,
-          // Fix image paths
           image: metadata.image?.startsWith('/uploads/') 
             ? metadata.image 
             : `/uploads/${metadata.image}`
@@ -34,7 +32,7 @@ async function generateContent() {
     );
 
     await fs.writeFile(outputFile, JSON.stringify(events, null, 2));
-    console.log(`Successfully processed ${events.length} events`);
+    console.log(`Generated ${events.length} events`);
   } catch (error) {
     console.error('Content generation failed:', error);
     process.exit(1);

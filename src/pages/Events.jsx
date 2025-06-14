@@ -36,7 +36,7 @@
 //         setIsLoading(false);
 //       }
 //     };
-    
+
 //     fetchEvents();
 //   }, [loadEvents, location.pathname]);
 
@@ -288,7 +288,6 @@
 
 // export default Events;
 
-
 import { motion } from "framer-motion";
 import EventCard from "../components/EventCard";
 import { useState, useEffect } from "react";
@@ -302,34 +301,32 @@ const Events = () => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
-        // For Create React App
-        const response = await fetch('/content/events/index.json');
-        if (!response.ok) throw new Error('Failed to load events');
+        const response = await fetch("/content/events/index.json");
+        if (!response.ok) throw new Error("Failed to load events");
         const data = await response.json();
-        
-        // Transform data if needed
-        const formattedEvents = data.map(event => ({
-          ...event,
-          id: event.slug || Math.random().toString(36).substring(2, 9),
-          image: event.image.startsWith('/uploads/') 
-            ? event.image 
-            : `/uploads/${event.image}`
-        }));
-        
-        setEvents(formattedEvents);
+
+        setEvents(
+          data.map((event) => ({
+            ...event,
+            image: event.image.startsWith("/uploads/")
+              ? event.image
+              : `/uploads/${event.image}`,
+          }))
+        );
       } catch (error) {
         console.error("Error loading events:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     fetchEvents();
   }, []);
 
-  const filteredEvents = activeFilter === "all" 
-    ? events 
-    : events.filter(event => event.type === activeFilter);
+  const filteredEvents =
+    activeFilter === "all"
+      ? events
+      : events.filter((event) => event.type === activeFilter);
 
   return (
     <div className="bg-white min-h-screen">
@@ -349,28 +346,30 @@ const Events = () => {
             <>
               {/* Filter Buttons */}
               <div className="flex flex-wrap justify-center gap-4 mb-8">
-                {["all", "workshop", "competition", "seminar", "webinar"].map((filter) => (
-                  <motion.button
-                    key={filter}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveFilter(filter)}
-                    className={`px-4 py-2 rounded-full capitalize font-medium ${
-                      activeFilter === filter
-                        ? "bg-red-600 text-white shadow-md"
-                        : "bg-yellow-100 text-red-700 border border-yellow-200 hover:bg-yellow-200"
-                    }`}
-                  >
-                    {filter}
-                  </motion.button>
-                ))}
+                {["all", "workshop", "competition", "seminar", "webinar"].map(
+                  (filter) => (
+                    <motion.button
+                      key={filter}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveFilter(filter)}
+                      className={`px-4 py-2 rounded-full capitalize font-medium ${
+                        activeFilter === filter
+                          ? "bg-red-600 text-white shadow-md"
+                          : "bg-yellow-100 text-red-700 border border-yellow-200 hover:bg-yellow-200"
+                      }`}
+                    >
+                      {filter}
+                    </motion.button>
+                  )
+                )}
               </div>
 
               {/* Events Grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredEvents.length > 0 ? (
                   filteredEvents.map((event, index) => (
-                    <EventCard 
+                    <EventCard
                       key={event.id}
                       event={event}
                       delay={(index % 3) * 0.1}
