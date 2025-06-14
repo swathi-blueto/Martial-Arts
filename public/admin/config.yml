@@ -9,9 +9,10 @@ public_folder: "/uploads"
 collections:
   - name: "events"
     label: "Events"
-    folder: "src/content/events"
+    folder: "content/events"
     create: true
     slug: "{{slug}}"
+    format: "json" 
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
