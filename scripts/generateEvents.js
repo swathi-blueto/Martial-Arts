@@ -54,17 +54,16 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'js-yaml';
 
-// Constants
 const CONTENT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/content/events');
 const OUTPUT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/content/events');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.json');
 
 export async function generateContent() {
   try {
-    // 1. Ensure output directory exists
+    
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
 
-    // 2. Read and filter markdown files
+    
     const files = await fs.readdir(CONTENT_DIR);
     const mdFiles = files.filter(file => file.endsWith('.md'));
     
@@ -72,14 +71,14 @@ export async function generateContent() {
       console.warn('⚠️ No markdown files found in', CONTENT_DIR);
     }
 
-    // 3. Process each file
+    
     const events = await Promise.all(
       mdFiles.map(async (file) => {
         try {
           const filePath = path.join(CONTENT_DIR, file);
           const content = await fs.readFile(filePath, 'utf8');
 
-          // Extract frontmatter
+         
           const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
           if (!frontmatterMatch) {
             throw new Error(`Invalid frontmatter in ${file}`);
@@ -87,7 +86,7 @@ export async function generateContent() {
 
           const metadata = yaml.load(frontmatterMatch[1]);
           
-          // Validate required fields
+          
           if (!metadata.title || !metadata.date) {
             console.warn(`⚠️ Missing required fields in ${file}`);
           }
@@ -96,7 +95,7 @@ export async function generateContent() {
             ...metadata,
             id: path.parse(file).name,
             slug: path.parse(file).name,
-            // Handle both external URLs and uploaded images
+            
             image: metadata.image?.startsWith('http') 
               ? metadata.image 
               : metadata.image?.startsWith('/uploads/')
@@ -110,7 +109,7 @@ export async function generateContent() {
       })
     );
 
-    // 4. Filter out null entries and save
+   
     const validEvents = events.filter(event => event !== null);
     await fs.writeFile(OUTPUT_FILE, JSON.stringify(validEvents, null, 2));
     console.log(`✅ Successfully processed ${validEvents.length}/${mdFiles.length} events`);

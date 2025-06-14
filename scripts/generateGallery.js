@@ -23,7 +23,7 @@ export async function generateGallery() {
 
           const metadata = yaml.load(frontmatterMatch[1]);
           
-          // Validate required fields
+         
           const requiredFields = ['title', 'category', 'image'];
           const missingFields = requiredFields.filter(field => !metadata[field]);
           if (missingFields.length > 0) {

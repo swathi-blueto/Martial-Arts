@@ -13,7 +13,7 @@ collections:
     create: true
     slug: "{{slug}}"
     sortable_fields: ["date"]
-    format: "frontmatter"  # Changed from json to frontmatter
+    format: "frontmatter"  
     extension: "md"  
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -30,7 +30,7 @@ collections:
     folder: "src/content/gallery"
     create: true
     slug: "{{slug}}"
-    format: "frontmatter"  # Changed from json to frontmatter
+    format: "frontmatter" 
     extension: "md"     
     fields:
       - { label: "Title", name: "title", widget: "string" }
