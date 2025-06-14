@@ -1,6 +1,7 @@
 backend:
   name: git-gateway
   branch: main
+  site_domain: martial-arts-silambam.netlify.app  # Your site URL
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
@@ -17,10 +18,6 @@ collections:
       - { label: "Location", name: "location", widget: "string" }
       - { label: "Image", name: "image", widget: "image" }
       - { label: "Excerpt", name: "excerpt", widget: "text" }
-      - {
-          label: "Type",
-          name: "type",
-          widget: "select",
+      - { label: "Type", name: "type", widget: "select", 
           options: ["workshop", "competition", "seminar", "webinar"],
-          default: "workshop"
-        }
+          default: "workshop" }
