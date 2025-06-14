@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Import your generators
-import { generateEvents } from './generateEvents.js';
+import { generateContent } from './generateEvents.js';
 import { generateGallery } from './generateGallery.js';
 
 async function main() {
@@ -14,7 +14,7 @@ async function main() {
     
     // Run both generators in parallel
     await Promise.all([
-      generateEvents(),
+      generateContent(),
       generateGallery()
     ]);
     
