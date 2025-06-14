@@ -146,9 +146,9 @@ const EventCard = ({ event, delay = 0 }) => {
       transition={{ duration: 0.6, delay }}
       viewport={{ once: true }}
       whileHover={{ y: -8 }}
-      className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100 h-full max-w-lg"
+      className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all group border-2 border-gray-100 hover:border-red-100 h-full"
     >
-      <div className="relative h-52 overflow-hidden">
+      <div className="relative h-57 overflow-hidden">
         <img
           src={imgSrc}
           alt={event.title}
@@ -156,7 +156,7 @@ const EventCard = ({ event, delay = 0 }) => {
           onError={() => 
             setImgSrc("https://via.placeholder.com/400x225?text=Silambam+Event")
           }
-          className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
