@@ -7,7 +7,9 @@ import yaml from 'js-yaml';
 const CONTENT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../src/content/gallery');
 const OUTPUT_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/content/gallery');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'index.json');
-async function generateGallery() {
+
+
+export async function generateGallery() {
   try {
     // Ensure output directory exists
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
@@ -66,4 +68,3 @@ async function generateGallery() {
   }
 }
 
-generateGallery();
