@@ -117,7 +117,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const EventCard = ({ event, delay = 0 }) => {
-  const [imgSrc, setImgSrc] = useState(event.image);
+  const [imgSrc, setImgSrc] = useState(() => {
+  // Handle both uploaded and external images
+  if (event.image.startsWith("http")) {
+    return event.image;
+  }
+  // For uploaded images, ensure correct path
+  return event.image.startsWith("/uploads/") 
+    ? event.image 
+    : `/uploads/${event.image}`;
+});
 
   // Format date for display
   const formatDate = (dateString) => {
@@ -144,6 +153,7 @@ const EventCard = ({ event, delay = 0 }) => {
         <img
           src={imgSrc}
           alt={event.title}
+          
           onError={() => 
             setImgSrc("https://via.placeholder.com/400x225?text=Silambam+Event")
           }

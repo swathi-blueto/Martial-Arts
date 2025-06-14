@@ -299,32 +299,33 @@ const Events = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch("/content/events/index.json");
-        if (!response.ok) throw new Error("Failed to load events");
-        const data = await response.json();
-        console.log(data)
-
-        setEvents(
-          data.map((event) => ({
-            ...event,
-            image: event.image.startsWith("/uploads/")
+ useEffect(() => {
+  const fetchEvents = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("/content/events/index.json");
+      if (!response.ok) throw new Error("Failed to load events");
+      const data = await response.json();
+      
+      setEvents(
+        data.map((event) => ({
+          ...event,
+          // Handles both external URLs and uploaded files:
+          image: event.image.startsWith("http") 
+            ? event.image 
+            : event.image.startsWith("/uploads/")
               ? event.image
-              : `/uploads/${event.image}`,
-          }))
-        );
-      } catch (error) {
-        console.error("Error loading events:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEvents();
-  }, []);
+              : `/uploads/${event.image}`
+        }))
+      );
+    } catch (error) {
+      console.error("Error loading events:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  fetchEvents();
+}, []);
 
   const filteredEvents =
     activeFilter === "all"
