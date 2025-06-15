@@ -6,3 +6,20 @@
   from = "/content/*"
   to = "/content/:splat"
   status = 200
+
+# Add these SPA catch-all redirects
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# If you're using React Router with base path
+[[redirects]]
+  from = "/gallery/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/events/*"
+  to = "/index.html"
+  status = 200
