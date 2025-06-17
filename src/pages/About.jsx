@@ -1,3 +1,4 @@
+
 import { motion } from 'framer-motion';
 
 const About = () => {
@@ -27,7 +28,28 @@ const About = () => {
   return (
     <div className="bg-white min-h-screen">
       
-      <section className="py-16 sm:py-20 bg-gradient-to-b from-red-700 to-red-800 text-white">
+      {/* <section className="py-30 sm:py-20 bg-gradient-to-b from-red-700 to-red-800 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6"
+          >
+            About Silambam
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="text-base sm:text-xl max-w-3xl mx-auto"
+          >
+            Discover the ancient martial art that combines physical prowess with cultural heritage
+          </motion.p>
+        </div>
+      </section> */}
+
+        <section className="pt-32 pb-20 sm:pt-40 sm:pb-24 bg-gradient-to-b from-red-700 to-red-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}

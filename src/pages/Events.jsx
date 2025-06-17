@@ -27,7 +27,7 @@ const Events = () => {
 
   return (
     <div className="bg-white min-h-screen">
-      <section className="py-20 bg-gradient-to-b from-red-700 to-red-800 text-white">
+      <section className="pt-32 pb-20 sm:pt-40 sm:pb-24 bg-gradient-to-b from-red-700 to-red-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
