@@ -191,7 +191,7 @@ const Header = () => {
   return (
     <header className="absolute top-0 left-0 right-0 z-50 text-white">
       <div className="container mx-auto px-4 sm:px-6 md:px-20 py-3 flex justify-between items-center">
-        {/* Logo and Title - Horizontal layout with better spacing */}
+       
         <motion.div
           initial={{ x: -100 }}
           animate={{ x: 0 }}
@@ -201,7 +201,7 @@ const Header = () => {
           <img 
             src={martial_logo} 
             alt="Nellukuthiyaar Logo"
-            className="h-23 w-auto" // Increased logo size
+            className="h-23 w-auto" 
           />
           <div className="hidden sm:block">
             <h1 className="text-lg font-bold leading-tight">
@@ -213,7 +213,7 @@ const Header = () => {
           </div>
         </motion.div>
         
-        {/* Menu Button - Positioned correctly */}
+        
         <motion.button
           className="text-white focus:outline-none z-50"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -230,12 +230,12 @@ const Header = () => {
               variants={menuIconVariants}
               className="cursor-pointer"
             >
-              <FiMenu className="h-7 w-7" />
+             <FiMenu className="h-8 w-8 font-bold" /> 
             </motion.div>
           )}
         </motion.button>
 
-        {/* Mobile Menu */}
+       
         <AnimatePresence>
           {isMenuOpen && (
             <>
@@ -255,7 +255,7 @@ const Header = () => {
                 className="fixed top-0 right-0 h-full w-4/5 max-w-sm bg-white shadow-2xl z-50"
               >
                 <div className="h-full flex flex-col">
-                  {/* Menu Header */}
+                  
                   <div className="flex items-center justify-between p-4 border-b border-gray-200">
                     <div className="flex items-center gap-3">
                       <img 
@@ -277,7 +277,7 @@ const Header = () => {
                     </button>
                   </div>
 
-                  {/* Navigation Items */}
+                  
                   <nav className="flex-1 flex flex-col mt-8">
                     <ul className="space-y-4 px-4 text-center">
                       {navItems.map((item) => (
@@ -299,7 +299,7 @@ const Header = () => {
                     </ul>
                   </nav>
 
-                  {/* Footer */}
+                  
                   <div className="p-4 border-t border-gray-200 text-center">
                     <p className="text-sm text-red-600">
                       Nellukuthiyaar Academy © {new Date().getFullYear()}

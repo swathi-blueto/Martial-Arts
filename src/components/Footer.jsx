@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { FaFacebook, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
 import { FiMapPin, FiPhone, FiMail } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import martial_logo from "../assets/martial_logo.png";
 
 const Footer = () => {
   return (
@@ -15,37 +16,33 @@ const Footer = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
+            className="flex flex-col"
           >
-            <h3 className="text-xl font-bold mb-4 text-red-600">
-              Trichy Silambam
-            </h3>
+            <div className="flex items-center mb-4">
+              <img 
+                src={martial_logo} 
+                alt="Nellukuthiyaar Logo"
+                className="h-12 w-auto mr-3"
+              />
+              <h3 className="text-xl font-bold text-red-600">
+                Nellukuthiyaar
+              </h3>
+            </div>
             <p className="mb-4 text-gray-600">
               Preserving and promoting the ancient martial art of Silambam in
-              Trichy since 1985.
+              Tamil Nadu since 2005.
             </p>
-            <div className="flex space-x-4">
-              <a
-                href="#"
-                className="text-gray-500 hover:text-red-600 transition"
-              >
+            <div className="flex space-x-4 mt-auto">
+              <a href="#" className="text-gray-500 hover:text-red-600 transition">
                 <FaFacebook size={20} />
               </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-red-600 transition"
-              >
+              <a href="#" className="text-gray-500 hover:text-red-600 transition">
                 <FaInstagram size={20} />
               </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-red-600 transition"
-              >
+              <a href="#" className="text-gray-500 hover:text-red-600 transition">
                 <FaYoutube size={20} />
               </a>
-              <a
-                href="#"
-                className="text-gray-500 hover:text-red-600 transition"
-              >
+              <a href="#" className="text-gray-500 hover:text-red-600 transition">
                 <FaTwitter size={20} />
               </a>
             </div>
@@ -60,42 +57,27 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-4 text-red-600">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  to="/"
-                  className="hover:text-red-600 transition text-gray-600"
-                >
+                <Link to="/" className="hover:text-red-600 transition text-gray-600">
                   Home
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/about"
-                  className="hover:text-red-600 transition text-gray-600"
-                >
-                  About Us
+                <Link to="/about" className="hover:text-red-600 transition text-gray-600">
+                  About Silambam
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/gallery"
-                  className="hover:text-red-600 transition text-gray-600"
-                >
+                <Link to="/gallery" className="hover:text-red-600 transition text-gray-600">
                   Gallery
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/events"
-                  className="hover:text-red-600 transition text-gray-600"
-                >
+                <Link to="/events" className="hover:text-red-600 transition text-gray-600">
                   Events
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/contact"
-                  className="hover:text-red-600 transition text-gray-600"
-                >
+                <Link to="/contact" className="hover:text-red-600 transition text-gray-600">
                   Contact Us
                 </Link>
               </li>
@@ -108,13 +90,11 @@ const Footer = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-xl font-bold mb-4 text-red-600">
-              Contact Info
-            </h3>
+            <h3 className="text-xl font-bold mb-4 text-red-600">Contact Info</h3>
             <ul className="space-y-3 text-gray-600">
               <li className="flex items-start">
                 <FiMapPin className="mt-1 mr-2 text-red-500" />
-                <span>123 Martial Arts St, Trichy 620001</span>
+                <span>123 Silambam Street, Trichy 620001</span>
               </li>
               <li className="flex items-start">
                 <FiPhone className="mt-1 mr-2 text-red-500" />
@@ -122,7 +102,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start">
                 <FiMail className="mt-1 mr-2 text-red-500" />
-                <span>contact@trichysilambam.com</span>
+                <span>contact@nellukuthiyaar.com</span>
               </li>
             </ul>
           </motion.div>
@@ -135,7 +115,7 @@ const Footer = () => {
           >
             <h3 className="text-xl font-bold mb-4 text-red-600">Newsletter</h3>
             <p className="mb-4 text-gray-600">
-              Subscribe to our newsletter for updates on classes and events.
+              Subscribe for updates on classes and events.
             </p>
             <form className="flex">
               <input
@@ -156,8 +136,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-200 pt-6 text-center">
           <p className="text-gray-600">
-            &copy; {new Date().getFullYear()} Trichy Silambam Academy. All
-            Rights Reserved.
+            &copy; {new Date().getFullYear()} Nellukuthiyaar Martial Arts & Sports Academy. All Rights Reserved.
           </p>
           <div className="mt-2 text-sm text-gray-500">
             <a href="#" className="hover:text-red-600 transition mx-2">
